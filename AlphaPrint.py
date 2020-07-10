@@ -4,42 +4,50 @@
 #6/25/2020
 
 #imports
-import socket, time, os, getpass, string, sys
+import socket, time, os, getpass, string, sys, argparse
 
-#Prints out some information that might be useful, not sure
-print("Python version")
-print (sys.version)
-print("Version info.")
-print (sys.version_info)
-print(" ")
+parser = argparse.ArgumentParser(description="defaults")
+parser.add_argument('-v', action='store_true', help='Use to enable verbose mode. Displays hexdump and some step-by-step confirmation')
 
-#argv = input("Please input [host printer port filename] as shown, use an 'x' for default: ")
-#argv = argv.split()
-argv = sys.argv
-hostname = argv[-4]
-printer = argv[-3]
-port = argv[-2]
-filename = argv[-1]
-user = getpass.getuser()  #should work on windows or linux  
+parser.add_argument('-p', action="store", dest = "p", default=False, help="Set port. Don't specify for default")
+parser.add_argument('-o', action="store", dest = "o", default=False, help="Set filename. Don't specify for default")
+parser.add_argument('-i', action="store", dest = "i", default=False, help="Set set hostname. Don't specify for default")
+parser.add_argument('-d', action="store", dest = "d", default=False, help="Set printer. Don't specify for default")
 
-#user = input("Input user. Leave blank for current: ")
-if hostname=='x' or hostname == 'X':
+
+args = parser.parse_args()
+
+
+port = args.p
+filename = args.o
+hostname = args.i
+printer = args.d
+verbose = args.v
+
+if not hostname:
     hostname = socket.gethostname()
-if port=='x' or port == 'X':
+if not port:
     port = 515
-else: #if not left blank, port needs to be int
+else:
     try:
         port = int(port)
     except:
         print("Connection failed. Port designation must be an integer")
-        sys.exit(0)
-#if not user:
-
-if filename=='x' or filename == 'X':
+if not filename:
     filename = "AlphaFile.txt"
-if printer=='x' or printer == 'X':
+if not printer:
     printer = "Test"
 
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
+#argv = input("Please input [host printer port filename] as shown, use an 'x' for default: ")
+#argv = argv.split()
+
+user = getpass.getuser()  #should work on windows or linux  
 
 def ack(): #sends for acknowledgment from server and if there's a NAK shows error code
     ack2 = s.recv(1024)
@@ -50,6 +58,7 @@ def ack(): #sends for acknowledgment from server and if there's a NAK shows erro
         ack = "unknown"
     else:
         s.send(bytes("\001\012","utf-8")) #abort print job
+        enablePrint()
         if ack2!=b'\xff':
             print("Encountered error. Code "+ str(ack2) + ". Cancelling print") #hopefully readable error
         else: #the only time it doesn't send back b'\xff' is for unrecognised printer, so this may help
@@ -88,6 +97,17 @@ def hexdump(z): #formats as readable hexdump
                 wht2 = wht2+" "        
             print("000000"+str(i)+"0"+"  "+hexed[counter:counter+24]+wht1+"  "+hexed[counter+24:counter+48]+wht2+"  "+printable[counter2:counter2+16])
 
+#Prints out some information that might be useful, not sure
+if verbose:
+    print("Python version")
+    print (sys.version)
+    print("Version info.")
+    print (sys.version_info)
+    print(" ")
+
+if not verbose:
+    blockPrint()
+
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #open connection
     s.connect((hostname, port))
@@ -101,6 +121,7 @@ except socket.error:
         print("Connected to "+ str(hostname)+ " on port "+str(port))
     except socket.error:
         print()
+        enablePrint()
         print("Connection to "+ str(hostname)+ " on port "+ str(port)+ " failed")
         sys.exit(0)
 
@@ -170,5 +191,8 @@ else: #send a the default file
 s.send("\000".encode("utf-8"))
 
 print("Closing connection...")
+if not verbose:
+    enablePrint()
+    print("File sent succesfully. Closing connection...")
 s.close()
 sys.exit(0)
