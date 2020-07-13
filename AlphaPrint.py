@@ -3,20 +3,20 @@
 #Jazz Sussman Moss
 #6/25/2020
 
+#Tests the print utility of AlphaCom, allows the user to specify host, printer, filename and port and print to a printer using the LPD protocol.
+
 #imports
 import socket, time, os, getpass, string, sys, argparse
 
 parser = argparse.ArgumentParser(description="defaults")
-parser.add_argument('-v', action='store_true', help='Use to enable verbose mode. Displays hexdump and some step-by-step confirmation')
 
-parser.add_argument('-p', action="store", dest = "p", default=False, help="Set port. Don't specify for default")
-parser.add_argument('-o', action="store", dest = "o", default=False, help="Set filename. Don't specify for default")
-parser.add_argument('-i', action="store", dest = "i", default=False, help="Set set hostname. Don't specify for default")
-parser.add_argument('-d', action="store", dest = "d", default=False, help="Set printer. Don't specify for default")
-
+parser.add_argument('-v', action='store_true', help='Produce verbose output. Displays hexdump and step-by-step confirmation')
+parser.add_argument('-p', action="store", dest = "p", default=False, help="Set port. Default is 515")
+parser.add_argument('-o', action="store", dest = "o", default=False, help='Set filename. Default prints "THIS IS A TEST" 60 times')
+parser.add_argument('-i', action="store", dest = "i", default=False, help="Set hostname. Default is local host")
+parser.add_argument('-d', action="store", dest = "d", default=False, help='Set printer. Default is "Test"')
 
 args = parser.parse_args()
-
 
 port = args.p
 filename = args.o
