@@ -26,7 +26,7 @@ AlphaPrint.py -p Port -o Filename -i Hostname -d Printer
 ```
 AlphaPrint.py
 ```
-Output text: File sent Successfully. Closing File...   
+Output text: File sent Successfully. Closing connection...   
 Output file: Alpha Document.prn   
 Contents: THIS IS A TEST (60 times)   
 
