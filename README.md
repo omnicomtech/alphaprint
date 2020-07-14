@@ -25,15 +25,16 @@ AlphaPrint.py -p Port -o Filename -i Hostname -d Printer
 ```
 AlphaPrint.py
 ```
-Output text: File sent Successfully. Closing File...
-Output file: Alpha Document.prn
-Contents: THIS IS A TEST (60 times)
+Output text: File sent Successfully. Closing File...   
+Output file: Alpha Document.prn   
+Contents: THIS IS A TEST (60 times)   
 
 ```
 AlphaPrint.py -v -p 515 -o HelloWorld.txt -i host -d Test
 ```
 Output text:
-```Python version
+```
+Python version
 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:25:05) [MSC v.1500 64 bit (AMD64)]
 Version info.
 sys.version_info(major=2, minor=7, micro=18, releaselevel='final', serial=0)
@@ -60,5 +61,8 @@ Success. Proceed
 Sending print job...
 Closing connection...
 ```
-Output file: Alpha Document.prn
-Contents: Hello World
+Output file: Alpha Document.prn   
+Contents: Hello World   
+
+## Troubleshooting
+Most errors are down to newer printers not supporting LPD. Follow [these steps](http://www.kbytes.co.uk/Articles.asp?articleid=58) to set up a text-only printer named 'Test' to test the functionality of the utility. These same steps also work on Windows 10.
