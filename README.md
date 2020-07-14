@@ -1,8 +1,8 @@
 # alphaprint
 
 A command-line utility to print to AlphaCom through the LPD protocol. Supports a user-specified port, host, file and printer.
-Written in Python 3.x. Backwards compatible to Python 2.x.
-Tested on Windows 10 with both python 3.x and 2.x.
+Written in Python 3.x. Backwards compatible to Python 2.x.  
+Tested on Windows 10 with both python 3.x and 2.x.  
 
 ## Installation
 
